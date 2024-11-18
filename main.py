@@ -162,7 +162,7 @@ class ImageClassifierApp:
         if uploaded_files:
             for uploaded_file in uploaded_files:
                 try:
-                    img = Image.open(uploaded_file).resize((32, 32))
+                    img = Image.open(uploaded_file).resize((32, 32), Image.LANCZOS)
                     img_array = tf.keras.preprocessing.image.img_to_array(img) / 255.0
                     img_array = tf.expand_dims(img_array, 0)
                     predictions = self.model.predict(img_array)
