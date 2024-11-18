@@ -22,22 +22,17 @@ Follow these steps to set up the application on your local machine:
 1. Clone the repository:
    ```bash
    git clone https://github.com/arrkpong/Image-Classification-Convolutional-Neural-Network-CNN.git
-Navigate into the project directory:
-
-bash
-
-cd Image-Classification-Convolutional-Neural-Network-CNN
-Install the required dependencies using pip:
-
-bash
-
-pip install -r requirements.txt
+2. Navigate into the project directory:
+   ```bash
+   cd Image-Classification-Convolutional-Neural-Network-CNN
+3. Install the required dependencies using pip:
+   ```bash
+   pip install -r requirements.txt
 Running the Application
 To start the application, run the following command:
-
-bash
-
-streamlit run app.py
+   ```bash
+   streamlit run app.py
+   ```
 Once the app starts, you can upload an image and the model will classify it. If the model has already been trained, it will use the trained weights to predict the class of the uploaded image.
 
 Model Training
