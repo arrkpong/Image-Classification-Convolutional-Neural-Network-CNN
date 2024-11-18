@@ -50,16 +50,13 @@ Once the app starts, you can upload an image and the model will classify it. If 
 
 Model Training
 The model is trained using the CIFAR-10 dataset, which is automatically loaded during initialization.
-
 The CNN architecture includes:
-
 Conv2D layers: For feature extraction from the input images.
 BatchNormalization: For faster convergence and reducing overfitting.
 LeakyReLU: For non-linear activations.
 MaxPooling: For downsampling and reducing dimensionality.
 Fully connected Dense layers: For classification of the extracted features.
 The model is trained using the Adam optimizer with categorical crossentropy loss, and the training process is saved to a CSV file for easy access.
-
 Model Checkpoints
 The app saves model checkpoints during training to prevent losing progress in case of interruption.
 The best model (based on the lowest validation loss) is saved as model_checkpoint.keras for future predictions.
