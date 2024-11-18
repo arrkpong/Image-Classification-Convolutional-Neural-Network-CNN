@@ -6,6 +6,8 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 import pandas as pd
+import os  # Import os module for checking and creating files/folders
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 class ImageClassifierApp:
     def __init__(self):
@@ -72,8 +74,15 @@ class ImageClassifierApp:
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def train_model(self):
         try:
-            # Define callbacks
-            checkpoint_callback = ModelCheckpoint(filepath='model_checkpoint.h5', save_best_only=True)
+            # Check if the 'logs' directory exists, if not, create it
+            if not os.path.exists('./logs'):
+                os.makedirs('./logs')
+
+            # Check if the checkpoint file exists, if not, create it
+            checkpoint_filepath = 'model_checkpoint.keras'
+            checkpoint_callback = ModelCheckpoint(filepath=checkpoint_filepath, save_best_only=True)
+            
+            # Define other callbacks
             early_stopping_callback = EarlyStopping(monitor='val_loss', patience=15)
             tensorboard_callback = TensorBoard(log_dir='./logs', histogram_freq=1)
             
@@ -150,4 +159,3 @@ class ImageClassifierApp:
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
     app = ImageClassifierApp()
-#-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
