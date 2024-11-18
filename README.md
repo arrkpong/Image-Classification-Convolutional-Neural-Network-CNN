@@ -48,7 +48,7 @@ To start the application, run the following command:
    ```
 Once the app starts, you can upload an image and the model will classify it. If the model has already been trained, it will use the trained weights to predict the class of the uploaded image.
 
-##Model Training
+## Model Training
 The model is trained using the CIFAR-10 dataset, which is automatically loaded during initialization.
 The CNN architecture includes:
 Conv2D layers: For feature extraction from the input images.
@@ -58,7 +58,7 @@ MaxPooling: For downsampling and reducing dimensionality.
 Fully connected Dense layers: For classification of the extracted features.
 The model is trained using the Adam optimizer with categorical crossentropy loss, and the training process is saved to a CSV file for easy access.
 
-##Model Checkpoints
+## Model Checkpoints
 The app saves model checkpoints during training to prevent losing progress in case of interruption.
 The best model (based on the lowest validation loss) is saved as model_checkpoint.keras for future predictions.
 ##Training History
@@ -66,15 +66,15 @@ The best model (based on the lowest validation loss) is saved as model_checkpoin
 The training history, including accuracy and loss for both the training and validation datasets, is saved as a CSV file (training_history.csv).
 Interactive charts are displayed on the app to show the training and validation performance over time.
 
-##License
+## License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-##Acknowledgements
+## Acknowledgements
 CIFAR-10 Dataset: The CIFAR-10 dataset is widely used for training machine learning models on image classification tasks.
 TensorFlow: An open-source platform for machine learning that powers the model in this app.
 Streamlit: A framework for creating interactive web applications with minimal effort.
 
-##Troubleshooting
+## Troubleshooting
 Error during model training: Make sure your system has sufficient resources (memory and GPU support) to handle model training.
 Image upload issues: The app currently supports only .jpg image formats. Please convert your images before uploading.
 Training logs not appearing: If you're not seeing training logs, check the logs directory to ensure TensorBoard is logging correctly.
