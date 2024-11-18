@@ -3,7 +3,17 @@
 This application is an image classification tool built using TensorFlow and Streamlit. It leverages a Convolutional Neural Network (CNN) model to classify images into 10 categories based on the CIFAR-10 dataset. Users can upload images for classification, view prediction results, and explore the training history of the model.
 
 ## Features
-- **Image Classification**: Classifies uploaded images into one of the 10 categories from the CIFAR-10 dataset: airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck.
+- **Image Classification**: Classifies uploaded images into one of the 10 categories from the CIFAR-10 dataset: 
+  - Airplane
+  - Automobile
+  - Bird
+  - Cat
+  - Deer
+  - Dog
+  - Frog
+  - Horse
+  - Ship
+  - Truck
 - **Model Training**: Automatically trains a CNN model using the CIFAR-10 dataset, saving both the model checkpoints and training history.
 - **Training History**: Visualizes training and validation accuracy and loss over time via interactive charts.
 - **Prediction Confidence**: Displays the predicted class along with the confidence score of the model's prediction.
@@ -19,15 +29,18 @@ This application is an image classification tool built using TensorFlow and Stre
 
 Follow these steps to set up the application on your local machine:
 
-1. Clone the repository:
+### 1. Clone the repository:
    ```bash
    git clone https://github.com/arrkpong/Image-Classification-Convolutional-Neural-Network-CNN.git
+   ```
 2. Navigate into the project directory:
    ```bash
    cd Image-Classification-Convolutional-Neural-Network-CNN
+   ```
 3. Install the required dependencies using pip:
    ```bash
    pip install -r requirements.txt
+   ```
 Running the Application
 To start the application, run the following command:
    ```bash
@@ -37,13 +50,16 @@ Once the app starts, you can upload an image and the model will classify it. If 
 
 Model Training
 The model is trained using the CIFAR-10 dataset, which is automatically loaded during initialization.
+
 The CNN architecture includes:
+
 Conv2D layers: For feature extraction from the input images.
 BatchNormalization: For faster convergence and reducing overfitting.
 LeakyReLU: For non-linear activations.
 MaxPooling: For downsampling and reducing dimensionality.
 Fully connected Dense layers: For classification of the extracted features.
 The model is trained using the Adam optimizer with categorical crossentropy loss, and the training process is saved to a CSV file for easy access.
+
 Model Checkpoints
 The app saves model checkpoints during training to prevent losing progress in case of interruption.
 The best model (based on the lowest validation loss) is saved as model_checkpoint.keras for future predictions.
