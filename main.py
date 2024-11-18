@@ -17,7 +17,7 @@ class ImageClassifierApp:
         self.x_train, self.x_test = self.x_train / 255.0, self.x_test / 255.0
 
         # Build the CNN model
-        self.model = self.build_model()
+        self.model = self.load_trained_model()  # Load trained model if available
 
         # Variable to store training history
         self.history = None
@@ -30,6 +30,15 @@ class ImageClassifierApp:
 
         # Run the Streamlit application
         self.app()
+
+    def load_trained_model(self):
+        if os.path.exists('model_checkpoint.keras'):
+            print("Loading the pre-trained model...")
+            return tf.keras.models.load_model('model_checkpoint.keras')
+        else:
+            print("Building a new model...")
+            return self.build_model()
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def build_model(self):
         # Define the architecture of the Convolutional Neural Network (CNN) model
@@ -71,6 +80,7 @@ class ImageClassifierApp:
             metrics=['accuracy']
         )
         return model
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def train_model(self):
         try:
@@ -106,56 +116,65 @@ class ImageClassifierApp:
 
         except Exception as e:
             st.error(f"An error occurred during training: {e}")
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def app(self):
         # Streamlit application layout
         st.title("Image Classification App")
         st.info("Note: The program can predict images in the categories available in the CIFAR-10 dataset: airplane, automobile, bird, cat, deer, dog, frog, horse, ship, and truck.")
-        uploaded_file = st.file_uploader("Choose an image...", type="jpg")
+        
+        uploaded_files = st.file_uploader("Choose images...", type="jpg", accept_multiple_files=True)
 
-        if uploaded_file is not None:
-            # Preprocess the uploaded image
-            print("Preprocessing the uploaded image...")
-            img = Image.open(uploaded_file)
-            img = img.resize((32, 32))
-            img_array = tf.keras.preprocessing.image.img_to_array(img)
-            img_array = img_array / 255.0
-            img_array = tf.expand_dims(img_array, 0)
+        if uploaded_files:
+            # Preprocess and make predictions for each uploaded file
+            for uploaded_file in uploaded_files:
+                img = Image.open(uploaded_file)
+                img = img.resize((32, 32))
+                img_array = tf.keras.preprocessing.image.img_to_array(img)
+                img_array = img_array / 255.0
+                img_array = tf.expand_dims(img_array, 0)
 
-            # Display training status
-            st.text("Training the model... Please wait.")
+                # Display training status
+                with st.spinner('Training the model... Please wait.'):
+                    self.train_model()
 
-            # Train the model
-            self.train_model()
+                # Make predictions using the trained model
+                if self.history is not None and 'accuracy' in self.history.history:
+                    predictions = self.model.predict(img_array)
+                    score = tf.nn.softmax(predictions[0])
+                    class_name = self.class_names[np.argmax(score)]
 
-            # Make predictions using the trained model
-            if self.history is not None and 'accuracy' in self.history.history:
-                predictions = self.model.predict(img_array)
-                score = tf.nn.softmax(predictions[0])
-                class_name = self.class_names[np.argmax(score)]
+                    # Display the prediction result
+                    st.success("Prediction completed!")
+                    st.image(img, use_column_width=True)
+                    st.write(f"Predicted class: {class_name}")
+                    st.write(f"Confidence: {round(100 * np.max(score), 2)}%")  
 
-                # Display the prediction result
-                print("Prediction completed!")
-                st.success("Prediction completed!")
-                st.image(img, use_column_width=True)
-                st.write(f"Predicted class: {class_name}")
-                st.write(f"Confidence: {round(100 * np.max(score), 2)}%")  
-                
-                # Display training history charts
-                st.title("Model Training History")
-                st.write("Charts showing the accuracy and loss of the model during training")
-                st.line_chart({'Training Accuracy': self.history.history['accuracy'],
-                               'Testing Accuracy': self.history.history['val_accuracy']})
-                st.line_chart({'Training Loss': self.history.history['loss'],
-                               'Testing Loss': self.history.history['val_loss']})
-                st.write(f"Highest Training Accuracy: {round(max(self.history.history['accuracy']), 4)}")
-                st.write(f"Highest Testing Accuracy: {round(max(self.history.history['val_accuracy']), 4)}")
-                st.write(f"Lowest Training Loss: {round(min(self.history.history['loss']), 4)}")
-                st.write(f"Lowest Testing Loss: {round(min(self.history.history['val_loss']), 4)}")
+                else:
+                    st.error("Model training failed. Please check the error message above.")
+        
+        # Display TensorBoard (if available)
+        st.title("TensorBoard")
+        tensorboard_log_dir = './logs'
+        st.tensorboard(tensorboard_log_dir)
 
-            else:
-                # Display an error message if training fails
-                st.error("Model training failed. Please check the error message above.")
+        # Display training history charts
+        if self.history is not None:
+            st.title("Model Training History")
+            st.write("Charts showing the accuracy and loss of the model during training")
+            st.line_chart({
+                'Training Accuracy': self.history.history['accuracy'],
+                'Testing Accuracy': self.history.history['val_accuracy']
+            })
+            st.line_chart({
+                'Training Loss': self.history.history['loss'],
+                'Testing Loss': self.history.history['val_loss']
+            })
+            st.write(f"Highest Training Accuracy: {round(max(self.history.history['accuracy']), 4)}")
+            st.write(f"Highest Testing Accuracy: {round(max(self.history.history['val_accuracy']), 4)}")
+            st.write(f"Lowest Training Loss: {round(min(self.history.history['loss']), 4)}")
+            st.write(f"Lowest Testing Loss: {round(min(self.history.history['val_loss']), 4)}")
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
     app = ImageClassifierApp()
